@@ -28,5 +28,3 @@ Unlike modern popular music where a song like “Yoga” by Asake will have one 
 - [ ] Airflow: to schedule.
 - [ ] Snowflake: storing processed data.
 - [ ] But also open to learning a new one along the way.
-
-This project README outlines the Classical Music Recommendation Engine project, detailing its goals, design outline, and tools used. For more detailed information, refer to the project documentation and code repository.
