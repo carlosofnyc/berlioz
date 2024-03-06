@@ -28,3 +28,5 @@ Unlike modern popular music where a song like “Yoga” by Asake will have one 
 - [ ] Airflow: to schedule.
 - [ ] Snowflake: storing processed data.
 - [ ] But also open to learning a new one along the way.
+
+![Infra-diagram](berlioz.png)
