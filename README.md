@@ -1,11 +1,10 @@
 # BERLIOZ
-# Classical Music Recommendation Engine (Berlioz)
+# A Classical Music Recommendation Engine (Berlioz)
 
-## Background
-
-Classical music is fantastic, but for beginners like me, it can be daunting to figure out where to start. On platforms like Spotify, a single piece of music, such as Beethoven’s 5th, can have over 10 different recordings by different performers. This variety not only makes it hard to choose but also means that the quality can vary widely. Unlike modern popular music, where a song typically has one official recording, classical pieces come in so many variations.
-
-My goal with this project is to create a space for new classical music enthusiasts to easily find the most popular recordings of classical pieces on Spotify. The app, "Berlioz," will be regularly updated to include new recordings of better quality or from renowned music halls like the NY Philharmonic. Each piece will be given a star rating based on quality, although measuring quality might be tricky since it's subjective. The app will also allow users to play a snippet of a piece and then direct them to Spotify if they want to listen to the full recording. The snippet played will be the most recognized movement from that symphony. For example, in Gustav Holst’s Planets, the most recognizable movement is “Jupiter.”
+## Background 
+Classical is great and all but if you are beginner like me, it is hard to know where to even start. 
+On Spotify, one piece of music, like Beethoven’s 5th could have as many as 10 or more different recordings by different recordings, and it means the quality can wildly vary and it also makes it hard to know which to listen to. 
+Unlike modern popular music where a song like “Yoga” by Asake will have one official recording on Spotify, classical pieces will have so many variations. 
 
 ## Project Goals (summarized)
 - [ ] Create a user-friendly recommendation engine tailored for classical music enthusiasts.
