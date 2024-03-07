@@ -66,5 +66,3 @@ classical_music_metadata = search_for_classical_music(token)
 classical_music_metadata_str = json.dumps(classical_music_metadata)
 
 upload_to_s3(aws_bucket_name, "classical_music_metadata.json", classical_music_metadata_str)
-
-print(classical_music_metadata)
