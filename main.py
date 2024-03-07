@@ -3,12 +3,20 @@ import os
 import base64
 import json
 from requests import post, get
+import boto3
 
 load_dotenv()
 
 client_id = os.getenv("CLIENT_ID")
 client_secret = os.getenv("CLIENT_SECRET")
+aws_access_key = os.getenv("AWS_ACCESS_KEY")
+aws_secret_key = os.getenv("AWS_SECRET_KEY")
+aws_region = os.getenv("AWS_REGION")
+aws_bucket_name = os.getenv("AWS_BUCKET_NAME")
 
+# Check that all required environment variables are set
+if not all([client_id, client_secret, aws_access_key, aws_secret_key, aws_region, aws_bucket_name]):
+    raise Exception("One or more required environment variables are not set")
 
 def get_token():
     auth_string = client_id + ":" + client_secret
@@ -29,33 +37,34 @@ def get_token():
 def get_auth_header(token):
     return {"Authorization": "Bearer " + token}
 
-def search_for_artist(token, artist_name):
+# search for classical music
+def search_for_classical_music(token):
     url = "https://api.spotify.com/v1/search?"
     headers = get_auth_header(token)
-    query = f"q={artist_name}&type=artist&limit=1"
+    query = f"q=classical&type=playlist,album,track&limit=50"
 
     query_url = url + query
     result = get(query_url, headers=headers)
-    json_result = json.loads(result.content)["artists"]["items"]
-
-    #use if statement to check if the artist exists
-    if len(json_result) == 0:
-        print("Artist does not exist")
-        return None
-    
-    return json_result[0]
-
-def get_songs_by_artist(token, artist_id):
-    url = f"https://api.spotify.com/v1/artists/{artist_id}/top-tracks?country=US"
-    headers = get_auth_header(token)
-    result = get(url, headers=headers)
-    json_result = json.loads(result.content)["tracks"]
+    json_result = json.loads(result.content)
     return json_result
 
-token = get_token()
-result = search_for_artist(token, "Hector Berlioz")
-artist_id = result["id"]
-songs = get_songs_by_artist(token, artist_id)
+def upload_to_s3(bucket_name, file_name, data):
+    s3 = boto3.client(
+        's3',
+        aws_access_key_id=aws_access_key,
+        aws_secret_access_key=aws_secret_key,
+        region_name=aws_region
+        )
+    try:
+        s3.put_object(Bucket=bucket_name, Key=file_name, Body=data)
+    except Exception as e:
+        print(f"Failed to upload data to S3: {e}")
+        raise
 
-for idx, song in enumerate(songs):
-    print(f"{idx + 1}. {song['name']}")
+token = get_token()
+classical_music_metadata = search_for_classical_music(token)
+classical_music_metadata_str = json.dumps(classical_music_metadata)
+
+upload_to_s3(aws_bucket_name, "classical_music_metadata.json", classical_music_metadata_str)
+
+print(classical_music_metadata)
