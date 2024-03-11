@@ -1,3 +1,4 @@
+'''
 import sys
 from awsglue.transforms import *
 from awsglue.utils import getResolvedOptions
@@ -59,3 +60,4 @@ AmazonS3_node1710184069983 = glueContext.write_dynamic_frame.from_options(
 )
 
 job.commit()
+'''
