@@ -5,6 +5,8 @@ import json
 from requests import post, get
 import boto3
 import logging
+import wikipedia
+import time
 
 load_dotenv()
 
@@ -72,8 +74,31 @@ def search_for_classical_music(token, limit=50, max_results=1000):
         logging.error(f"Failed to search for classical music: {e}")
         raise
 
+composer_cache = {}
 
-# preprocess the data before uploading to S3
+def get_composer_background(composer):
+    if composer in composer_cache:
+        return composer_cache[composer]
+    else:
+        try:
+            composer_page = wikipedia.page(composer)
+            background_info = composer_page.summary
+            composer_cache[composer] = background_info
+            return background_info
+        except (wikipedia.exceptions.DisambiguationError, wikipedia.exceptions.PageError):
+            return None
+
+def get_background_from_musicbrainz(composer):
+    # Make a request to the MusicBrainz API to retrieve background information for the composer
+    # Implement the code to parse the response and extract relevant information
+    # Return the background information if found, otherwise return None
+    pass
+
+def get_background_from_classical_archives(composer):
+    # Make a request to the Classical Archives API or scrape the website to retrieve background information for the composer
+    # Return the background information if found, otherwise return None
+    pass
+
 def preprocess_classical_music_metadata(classical_music_metadata):
     preprocessed_data = []
     
@@ -85,9 +110,29 @@ def preprocess_classical_music_metadata(classical_music_metadata):
             "album": track["album"]["name"],
             "release_date": track["album"]["release_date"],
             "duration_ms": track["duration_ms"],
-            "popularity": track["popularity"]
+            "popularity": track["popularity"],
+            "background_info": ""
         }
+        
+        background_info = get_composer_background(track_data["composer"])
+        
+        if background_info is None:
+            # Fallback to MusicBrainz
+            background_info = get_background_from_musicbrainz(track_data["composer"])
+        
+        if background_info is None:
+            # Fallback to Classical Archives
+            background_info = get_background_from_classical_archives(track_data["composer"])
+        
+        if background_info is not None:
+            track_data["background_info"] = background_info
+        else:
+            logging.warning(f"Couldn't find background information for composer '{track_data['composer']}'")
+        
         preprocessed_data.append(track_data)
+        
+        # Rate limiting: Add a small delay between API calls
+        time.sleep(0.5)
     
     return preprocessed_data
 
